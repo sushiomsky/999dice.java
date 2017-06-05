@@ -1,5 +1,8 @@
 package dice.client.web;
 
+import javax.json.Json;
+import javax.json.JsonReader;
+import javax.json.JsonReaderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -13,14 +16,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.json.Json;
-import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
-
 public class DiceWebAPI {
 	static private final String WebUri = "https://www.999dice.com/api/web.aspx";
 	static private final long GuessSpan = 1000000;
 	static private final BigDecimal HousePayout = new BigDecimal("0.999");
+	static public final String CURRENCY_CODE_BITCOIN = "btc";
+	static public final String CURRENCY_CODE_DOGE = "doge";
+	static public final String CURRENCY_CODE_LITECOIN = "ltc";
+	static public final String CURRENCY_CODE_ETHER = "eth";
+
+	public static String getCurrentCurrencyCode() {
+		return currentCurrencyCode;
+	}
+
+	public static void setCurrentCurrencyCode(String currentCurrencyCode) {
+		DiceWebAPI.currentCurrencyCode = currentCurrencyCode;
+	}
+
+	static private String currentCurrencyCode = CURRENCY_CODE_BITCOIN;
+
 
 	static private final JsonReaderFactory jsonReaderFactoryInstance = Json
 			.createReaderFactory(null);
@@ -169,6 +183,7 @@ public class DiceWebAPI {
 		Map<String, String> x = new HashMap<String, String>();
 		x.put("a", "GetBalance");
 		x.put("s", sessionCookie);
+		x.put("Currency", getCurrentCurrencyCode());
 		return x;
 	}
 
